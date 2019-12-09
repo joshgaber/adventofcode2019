@@ -17,17 +17,13 @@ fs.readFile('./input.txt', 'utf8', function(err, data) {
 
         let currentAmp = 0;
         do {
-            // console.log('Running amp', currentAmp);
             if(amps[currentAmp].run() && currentAmp === 4) {
-                console.log('break at amp', currentAmp, amps[currentAmp].lastOutput);
                 maxOutput = Math.max(maxOutput, amps[currentAmp].lastOutput);
                 break;
             } else {
                 let outputs = amps[currentAmp].popOutputs();
-                let currentState = amps[currentAmp].commands;
                 currentAmp = (currentAmp+1) % 5;
                 amps[currentAmp].pushInputs(outputs);
-                amps[currentAmp].setCommands(currentState.slice());
             }
         } while (true)
     }
