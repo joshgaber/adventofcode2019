@@ -1,75 +1,79 @@
 module.exports = class {
 
-    position = 0;
-    commands;
-    inputs;
+    cursor = 0;
     outputs = [];
 
     constructor(commands, inputs = [] ) {
-        this.commands = commands.slice();
+        this.memory = commands.slice();
         this.inputs = inputs.slice();
     }
 
     run() {
         do {
-            let commandString = this.commands[this.position].toString().padStart(5,"0");
-            let command = parseInt(commandString.substr(commandString.length - 2));
-    
-            if (command === 99) return true;
-            if (command === 1) {
-                let param1 = this.getParameter(1, commandString);
-                let param2 = this.getParameter(2, commandString);
-                this.commands[this.commands[this.position + 3]] = param1 + param2;
-                this.position += 4
-            } else if (command === 2) {
-                let param1 = this.getParameter(1, commandString);
-                let param2 = this.getParameter(2, commandString);
-                this.commands[this.commands[this.position + 3]] = param1 * param2;
-                this.position += 4;
-            } else if (command === 3) {
+            let command = this.memory[this.cursor].toString().padStart(5,"0");
+            let action = parseInt(command.substr(command.length - 2));
+
+            if (action === 99) return true;
+            if (action === 1) {
+                let param1 = this.getMemory(1, command);
+                let param2 = this.getMemory(2, command);
+                this.setMemory(3, param1 + param2).advanceCursor(4);
+            } else if (action === 2) {
+                let param1 = this.getMemory(1, command);
+                let param2 = this.getMemory(2, command);
+                this.setMemory(3, param1 * param2).advanceCursor(4);
+            } else if (action === 3) {
                 if (this.inputs.length === 0) {
                     return false;
                 }
-                this.commands[this.commands[this.position+1]] = this.inputs.shift();
-                this.position+=2;
-            } else if (command === 4) {
-                this.outputs.push(this.getParameter(1, commandString));
-                this.position+=2;
-            } else if (command === 5) {
-                let param1 = this.getParameter(1, commandString);
-                let param2 = this.getParameter(2, commandString);
+                this.setMemory(1, this.inputs.shift()).advanceCursor(2);
+            } else if (action === 4) {
+                this.outputs.push(this.getMemory(1, command));
+                this.advanceCursor(2);
+            } else if (action === 5) {
+                let param1 = this.getMemory(1, command);
+                let param2 = this.getMemory(2, command);
                 if (param1) {
-                    this.position = param2;
+                    this.advanceCursor(param2, 0);
                 } else {
-                    this.position+=3;
+                    this.advanceCursor(3);
                 }
-            } else if (command === 6) {
-                let param1 = this.getParameter(1, commandString);
-                let param2 = this.getParameter(2, commandString);
+            } else if (action === 6) {
+                let param1 = this.getMemory(1, command);
+                let param2 = this.getMemory(2, command);
                 if (!param1) {
-                    this.position = param2;
+                    this.advanceCursor(param2, 0);
                 } else {
-                    this.position+=3;
+                    this.advanceCursor(3);
                 }
-            } else if (command === 7) {
-                let param1 = this.getParameter(1, commandString);
-                let param2 = this.getParameter(2, commandString);
-                this.commands[this.commands[this.position + 3]] = (param1 < param2 ? 1 : 0);
-                position+=4;
-            } else if (command === 8) {
-                let param1 = this.getParameter(1, commandString);
-                let param2 = this.getParameter(2, commandString);
-                this.commands[this.commands[this.position + 3]] = (param1 === param2 ? 1 : 0);
-                position+=4;
+            } else if (action === 7) {
+                let param1 = this.getMemory(1, command);
+                let param2 = this.getMemory(2, command);
+                this.setMemory(3, (param1 < param2 ? 1 : 0)).advanceCursor(4);
+            } else if (action === 8) {
+                let param1 = this.getMemory(1, command);
+                let param2 = this.getMemory(2, command);
+                this.setMemory(3, (param1 === param2 ? 1 : 0)).advanceCursor(4);
             }
         } while (true);
     }
 
-    getParameter(param, action) {
+    getMemory(param, action) {
         return (parseInt(action.charAt(3 - param)) ?
-            this.commands[this.position + param] :
-            this.commands[this.commands[this.position + param]]);
+            this.memory[this.cursor + param] :
+            this.memory[this.memory[this.cursor + param]]);
     }
+
+    setMemory(param, value) {
+        this.memory[this.memory[this.cursor + param]] = value;
+        return this;
+    }
+
+    advanceCursor(offset, base = this.cursor) {
+        this.cursor = offset + base;
+        return this;
+    }
+
 
     pushInputs(input) {
         this.inputs.push(...input);
