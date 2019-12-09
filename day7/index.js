@@ -4,15 +4,15 @@ const phases = buildPhases();
 var maxOutput = 0;
 
 fs.readFile('./input.txt', 'utf8', function(err, data) {
-    const commands = data.split(',').map(data => parseInt(data));
+    const memory = data.split(',').map(data => parseInt(data));
 
     for (i in phases) {
         let amps = [
-            new Intcode(commands.slice(), [phases[i][0], 0 ]),
-            new Intcode(commands.slice(), [phases[i][1]]),
-            new Intcode(commands.slice(), [phases[i][2]]),
-            new Intcode(commands.slice(), [phases[i][3]]),
-            new Intcode(commands.slice(), [phases[i][4]]),
+            new Intcode(memory.slice(), [phases[i][0], 0 ]),
+            new Intcode(memory.slice(), [phases[i][1]]),
+            new Intcode(memory.slice(), [phases[i][2]]),
+            new Intcode(memory.slice(), [phases[i][3]]),
+            new Intcode(memory.slice(), [phases[i][4]]),
         ];
 
         let currentAmp = 0;
