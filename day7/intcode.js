@@ -4,8 +4,8 @@ module.exports = class {
     outputs = [];
 
     constructor(commands, inputs = [] ) {
-        this.memory = commands.slice();
-        this.inputs = inputs.slice();
+        this.memory = commands;
+        this.inputs = inputs;
     }
 
     run() {
@@ -89,4 +89,4 @@ module.exports = class {
     get lastOutput() {
         return this.outputs[this.outputs.length - 1];
     }
-}
+};

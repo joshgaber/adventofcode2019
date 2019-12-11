@@ -1,12 +1,33 @@
 const fs = require('fs');
+const path = require('path');
 const Intcode = require('./intcode');
-const phases = buildPhases();
-var maxOutput = 0;
 
-fs.readFile('./input.txt', 'utf8', function(err, data) {
-    const memory = data.split(',').map(data => parseInt(data));
+const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+const memory = data.split(',').map(Number);
 
-    for (i in phases) {
+console.log('Max output for phases 0-4:', runAmplifier(fromPhases("01234")));
+console.log('Max output for phases 5-9:', runAmplifier(fromPhases("56789")));
+
+function fromPhases(phaseFilter) {
+    const phaseList = phaseFilter.split('');
+    let phaseBuild = [];
+    for (let i = 10000; i<=99999; i++) {
+        const j = i.toString().split("");
+        if (j.includes(phaseList[0]) &&
+            j.includes(phaseList[1]) &&
+            j.includes(phaseList[2]) &&
+            j.includes(phaseList[3]) &&
+            j.includes(phaseList[4])
+        ) {
+            phaseBuild.push(j.map(Number));
+        }
+    }
+    return phaseBuild;
+}
+
+function runAmplifier(phases) {
+    let maxOutput = 0;
+    for (const i in phases) {
         let amps = [
             new Intcode(memory.slice(), [phases[i][0], 0 ]),
             new Intcode(memory.slice(), [phases[i][1]]),
@@ -28,21 +49,5 @@ fs.readFile('./input.txt', 'utf8', function(err, data) {
         } while (true)
     }
 
-    console.log('Max output', maxOutput);
-})
-
-function buildPhases() {
-    let temp = []
-    for (i = 56789; i<=98765; i++) {
-        j = i.toString().split("");
-        if (j.includes("5") &&
-            j.includes("6") &&
-            j.includes("7") &&
-            j.includes("8") &&
-            j.includes("9")
-        ) {
-            temp.push(j.map(Number));
-        }
-    }
-    return temp;
+    return maxOutput;
 }
