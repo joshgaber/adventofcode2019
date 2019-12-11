@@ -13,54 +13,54 @@ const getVectorCoordinates = function(data, id) {
 
     let step = 1;
     for(const v in vectors) {
-        const direction = vectors[v].substr(0,1);
-        const distance = parseInt(vectors[v].substr(1));
+        if (vectors.hasOwnProperty(v)) {
+            const direction = vectors[v].substr(0,1);
+            const distance = parseInt(vectors[v].substr(1));
 
-        for (let i = 0; i<distance; i++) {
-            let lastPoint = Object.assign({}, points[points.length - 1]);
-            switch (direction) {
-                case 'U':
-                    lastPoint.y++;
-                    break;
-                case 'D':
-                    lastPoint.y--;
-                    break;
-                case 'L':
-                    lastPoint.x--;
-                    break;
-                case 'R':
-                    lastPoint.x++;
-                    break;
-                default:
-                    break;
+            for (let i = 0; i<distance; i++) {
+                let lastPoint = Object.assign({}, points[points.length - 1]);
+                switch (direction) {
+                    case 'U':
+                        lastPoint.y++;
+                        break;
+                    case 'D':
+                        lastPoint.y--;
+                        break;
+                    case 'L':
+                        lastPoint.x--;
+                        break;
+                    case 'R':
+                        lastPoint.x++;
+                        break;
+                    default:
+                        break;
+                }
+                lastPoint.step = step;
+                points.push(lastPoint);
+                step++;
             }
-            lastPoint.step = step;
-            points.push(lastPoint);
-            step++;
         }
     }
     points.shift();
     return points;
 };
 
-const sortWiresByDistance = function(a, b) {
-    return a.distance - b.distance;
-};
+const sortWiresByDistance = (a, b) => a.distance - b.distance;
 
-const sortWiresBySteps = function(a, b) {
-    return a.stepTotal - b.stepTotal;
-};
+const sortWiresBySteps = (a, b) => a.stepTotal - b.stepTotal;
 
 const distance = point => Math.abs(point.x) + Math.abs(point.y);
 
 const convertToHashArray = function(coords, indexer) {
     let hash = {};
-    for (let a in coords) {
-        const index = indexer(coords[a]);
-        if (hash.hasOwnProperty(index)) {
-            hash[index].push(coords[a]);
-        } else {
-            hash[index] = [coords[a]];
+    for (const a in coords) {
+        if (coords.hasOwnProperty(a)) {
+            const index = indexer(coords[a]);
+            if (hash.hasOwnProperty(index)) {
+                hash[index].push(coords[a]);
+            } else {
+                hash[index] = [coords[a]];
+            }
         }
     }
     return hash;
@@ -76,12 +76,12 @@ fs.readFile('./input.txt', 'utf-8', function(err, data) {
     let locationHash = convertToHashArray(coords, i => `x${i.x}y${i.y}`);
     let crossovers = {};
     for (const i in locationHash) {
-        if (locationHash[i].length > 1 && locationHash[i].find(j => j.id === 'wire1') && locationHash[i].find(j => j.id === 'wire2')) {
+        if (locationHash[i].find(j => j.id === 'wire1') && locationHash[i].find(j => j.id === 'wire2')) {
             crossovers[i] = locationHash[i];
         }
     }
 
-    let crossSummary = Object.keys(crossovers).map(i => ({
+    const crossSummary = Object.keys(crossovers).map(i => ({
         x: crossovers[i][0].x,
         y: crossovers[i][0].y,
         distance: distance(crossovers[i][0]),
