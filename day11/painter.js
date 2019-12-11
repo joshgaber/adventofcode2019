@@ -16,7 +16,6 @@ module.exports = class {
         while(a < inputs.length) {
             if (this.paintMode) {
                 this.paintIt(inputs[a]);
-                // console.log(`print ${inputs[a]} at position (${this.position.x},${this.position.y})`);
             } else {
                 this.changeDirection(inputs[a]);
             }
