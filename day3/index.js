@@ -1,59 +1,96 @@
-const fs = require('fs')
+const fs = require('fs');
 
-const getVectorCoordinates = function(data) {
+const getVectorCoordinates = function(data, id) {
     const vectors = data.split(',');
 
     let points = [
         {
             x: 0,
-            y: 0
+            y: 0,
+            id: id
         }
     ];
 
-    for(v in vectors) {
+    let step = 1;
+    for(const v in vectors) {
         const direction = vectors[v].substr(0,1);
         const distance = parseInt(vectors[v].substr(1));
 
         for (let i = 0; i<distance; i++) {
-            const lastPoint = points[points.length - 1];
+            let lastPoint = Object.assign({}, points[points.length - 1]);
             switch (direction) {
                 case 'U':
-                    points.push({x: lastPoint.x, y: lastPoint.y+1});
+                    lastPoint.y++;
                     break;
                 case 'D':
-                    points.push({x: lastPoint.x, y: lastPoint.y-1});
+                    lastPoint.y--;
                     break;
                 case 'L':
-                    points.push({x: lastPoint.x-1, y: lastPoint.y});
+                    lastPoint.x--;
                     break;
                 case 'R':
-                    points.push({x: lastPoint.x+1, y: lastPoint.y});
+                    lastPoint.x++;
                     break;
                 default:
                     break;
             }
+            lastPoint.step = step;
+            points.push(lastPoint);
+            step++;
         }
     }
+    points.shift();
     return points;
-}
+};
 
-const sortWires = function(a, b) {
-    return (Math.abs(a.x) + Math.abs(a.y)) - (Math.abs(b.x) + Math.abs(b.y))
-}
+const sortWiresByDistance = function(a, b) {
+    return a.distance - b.distance;
+};
+
+const sortWiresBySteps = function(a, b) {
+    return a.stepTotal - b.stepTotal;
+};
+
+const distance = point => Math.abs(point.x) + Math.abs(point.y);
+
+const convertToHashArray = function(coords, indexer) {
+    let hash = {};
+    for (let a in coords) {
+        const index = indexer(coords[a]);
+        if (hash.hasOwnProperty(index)) {
+            hash[index].push(coords[a]);
+        } else {
+            hash[index] = [coords[a]];
+        }
+    }
+    return hash;
+};
 
 fs.readFile('./input.txt', 'utf-8', function(err, data) {
-    const wires = data.split(/\r?\n/g).map(getVectorCoordinates);
-    // wires[0].sort(sortWires);
-    // console.log("first wires sorted");
-    // wires[1].sort(sortWires);
-    // console.log("second wires sorted");
-    
-    for(a in wires[0]) {
-        for (b in wires[1]) {
-            if (wires[0][a].x === wires[1][b].x && wires[0][a].y === wires[1][b].y) {
-                steps = parseInt(a)+parseInt(b);
-                console.log('x: '+wires[0][a].x, 'y: '+wires[0][a].y, 'steps: '+steps);
-            }
+    const wires = data.split(/\r?\n/g);
+    const coords = [
+        getVectorCoordinates(wires[0], 'wire1'),
+        getVectorCoordinates(wires[1], 'wire2')
+    ].flat();
+
+    let locationHash = convertToHashArray(coords, i => `x${i.x}y${i.y}`);
+    let crossovers = {};
+    for (const i in locationHash) {
+        if (locationHash[i].length > 1 && locationHash[i].find(j => j.id === 'wire1') && locationHash[i].find(j => j.id === 'wire2')) {
+            crossovers[i] = locationHash[i];
         }
     }
-})
+
+    let crossSummary = Object.keys(crossovers).map(i => ({
+        x: crossovers[i][0].x,
+        y: crossovers[i][0].y,
+        distance: distance(crossovers[i][0]),
+        stepTotal: crossovers[i].reduce((a, b) => a + b.step, 0)
+    }));
+
+    crossSummary.sort(sortWiresByDistance);
+    console.log('Shortest distance:', crossSummary[0].distance);
+
+    crossSummary.sort(sortWiresBySteps);
+    console.log('Shortest step total:', crossSummary[0].stepTotal);
+});
