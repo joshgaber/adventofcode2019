@@ -8,7 +8,16 @@ const alwaysIncreases = function(number) {
         }
     }
     return true;
-}
+};
+
+const hasDuplicate = function(number) {
+    for (let x = 0; x < 5; x++) {
+        if (number[x] === number[x+1]) {
+            return true;
+        }
+    }
+    return false;
+};
 
 const hasDuplicateButNotTriplicate = function(number) {
     for (let x = 0; x < 5; x++) {
@@ -23,14 +32,16 @@ const hasDuplicateButNotTriplicate = function(number) {
         }
     }
     return false;
-}
+};
 
-let count = 0;
-for (let i = first; i <= last; i++) {
-    let test = i.toString().split("").map(Number);
-    if (alwaysIncreases(test) && hasDuplicateButNotTriplicate(test)) {
-        count++;
-    }
-}
+const intToNumberArray = (i) => i.toString().split("").map(Number);
 
-console.log(count);
+const range = [...Array(last - first + 1).keys()].map(i => i + first).map(intToNumberArray);
+
+const increaseOnly = range.filter(alwaysIncreases);
+
+const part1 = increaseOnly.filter(hasDuplicate);
+console.log(`part 1 count:`,part1.length);
+
+const part2 = increaseOnly.filter(hasDuplicateButNotTriplicate);
+console.log(`part 1 count:`,part2.length);
