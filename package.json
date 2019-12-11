@@ -1,0 +1,23 @@
+{
+  "name": "adventofcode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Still in the works\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshgaber/adventofcode2019.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joshgaber/adventofcode2019/issues"
+  },
+  "homepage": "https://github.com/joshgaber/adventofcode2019#readme",
+  "dependencies": {
+    "compute-gcd": "^1.2.0"
+  }
+}
