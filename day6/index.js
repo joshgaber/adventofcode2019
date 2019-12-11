@@ -1,6 +1,5 @@
 const fs = require('fs');
-var explored = [];
-var max_length = 500;
+let explored = [];
 
 fs.readFile('./input.txt', 'utf8', function(err, data) {
     const orbits = data.split(/\r?\n/g);
@@ -9,39 +8,44 @@ fs.readFile('./input.txt', 'utf8', function(err, data) {
     orbits.forEach(function(orbit) {
         const [orbitee, orbiter] = orbit.split(')');
         if (! ($orbiter = orbitMap.find(em => orbiter === em.name))) {
-            $orbiter = { name: orbiter, neighbors: [], parent: null }
+            $orbiter = { name: orbiter, neighbors: [], children: [], parent: null };
             orbitMap.push($orbiter);
         }
         if (! ($orbitee = orbitMap.find(em => orbitee === em.name))) {
-            $orbitee = { name: orbitee, neighbors: [], parent: null }
+            $orbitee = { name: orbitee, neighbors: [], children: [], parent: null };
             orbitMap.push($orbitee);
         }
         $orbitee.neighbors.push($orbiter);
+        $orbitee.children.push($orbiter);
         $orbiter.neighbors.push($orbitee);
         $orbiter.parent = orbitee;
-    })
+    });
 
-    let distance = searchFor('SAN', orbitMap.find(o => o.name === 'YOU'), 0);
-    
+    const totalOrbits = orbitMap.reduce((a, b) => a + getChildrenDepth(b), 0);
+    console.log(`Total direct and indirect orbits:`, totalOrbits);
 
-    if (!explored.includes(orbitMap.find(o => o.name === 'YOU').parent.name)) distance++;
-    if (!explored.includes(orbitMap.find(o => o.name === 'SAN').parent.name)) distance++;
-    console.log(distance);
-})
+    let path = searchFor('SAN', orbitMap.find(o => o.name === 'YOU'), 0);
+    let pathArray = path.split(':');
+    let distance = pathArray.length;
 
-function searchFor(target, orbit, depth) {
+    (pathArray.includes(orbitMap.find(o => o.name === 'YOU').parent.name)) ? distance-- : distance++;
+    (pathArray.includes(orbitMap.find(o => o.name === 'SAN').parent.name)) ? distance-- : distance++;
+    console.log(`distance:`, distance);
+});
+
+function searchFor(target, orbit) {
     explored.push(orbit.name);
-    if (depth >= 353) {
-        return 0;
-    }
+
     if (orbit.name === target) {
-        return depth;
+        return orbit.name;
     }
 
-    return orbit.neighbors.reduce(function(count, o) {
-        if (!explored.includes(o.name)) {
-            return count + searchFor(target, o, depth+1);
-        }
-        return count + 0;
-    }, 0)
+    let findNext = orbit.neighbors.reduce((path, o) =>
+        path + (!explored.includes(o.name) ? searchFor(target, o) : '')
+    , '');
+    return (findNext !== '' ? findNext + ':' + orbit.name : '');
+}
+
+function getChildrenDepth(o) {
+    return o.children.reduce((a, b) => a + getChildrenDepth(b), o.children.length);
 }
