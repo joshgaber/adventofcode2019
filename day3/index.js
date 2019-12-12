@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const getVectorCoordinates = function(data, id) {
     const vectors = data.split(',');
@@ -66,31 +67,30 @@ const convertToHashArray = function(coords, indexer) {
     return hash;
 };
 
-fs.readFile('./input.txt', 'utf-8', function(err, data) {
-    const wires = data.split(/\r?\n/g);
-    const coords = [
-        getVectorCoordinates(wires[0], 'wire1'),
-        getVectorCoordinates(wires[1], 'wire2')
-    ].flat();
+data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf-8');
+const wires = data.split(/\r?\n/g);
+const coords = [
+    getVectorCoordinates(wires[0], 'wire1'),
+    getVectorCoordinates(wires[1], 'wire2')
+].flat();
 
-    let locationHash = convertToHashArray(coords, i => `x${i.x}y${i.y}`);
-    let crossovers = {};
-    for (const i in locationHash) {
-        if (locationHash[i].find(j => j.id === 'wire1') && locationHash[i].find(j => j.id === 'wire2')) {
-            crossovers[i] = locationHash[i];
-        }
+let locationHash = convertToHashArray(coords, i => `x${i.x}y${i.y}`);
+let crossovers = {};
+for (const i in locationHash) {
+    if (locationHash[i].find(j => j.id === 'wire1') && locationHash[i].find(j => j.id === 'wire2')) {
+        crossovers[i] = locationHash[i];
     }
+}
 
-    const crossSummary = Object.keys(crossovers).map(i => ({
-        x: crossovers[i][0].x,
-        y: crossovers[i][0].y,
-        distance: distance(crossovers[i][0]),
-        stepTotal: crossovers[i].reduce((a, b) => a + b.step, 0)
-    }));
+const crossSummary = Object.keys(crossovers).map(i => ({
+    x: crossovers[i][0].x,
+    y: crossovers[i][0].y,
+    distance: distance(crossovers[i][0]),
+    stepTotal: crossovers[i].reduce((a, b) => a + b.step, 0)
+}));
 
-    crossSummary.sort(sortWiresByDistance);
-    console.log('Shortest distance:', crossSummary[0].distance);
+crossSummary.sort(sortWiresByDistance);
+console.log('Shortest distance:', crossSummary[0].distance);
 
-    crossSummary.sort(sortWiresBySteps);
-    console.log('Shortest step total:', crossSummary[0].stepTotal);
-});
+crossSummary.sort(sortWiresBySteps);
+console.log('Shortest step total:', crossSummary[0].stepTotal);
