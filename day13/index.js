@@ -13,9 +13,24 @@ const game = new Arcade();
 game.build(machine.popOutputs());
 const map = game.tiles;
 
-const mapHash = {};
-map.forEach(m => mapHash[`${m.x}x${m.y}`] = m.id);
-
-blockCount = Object.keys(mapHash).filter(i => mapHash[i] === 2).length;
+blockCount = Object.keys(map).filter(i => map[i].id === 2).length;
 
 console.log(`Block count:`, blockCount);
+
+// Part 2
+
+const machine2 = new Intcode(memory.slice());
+machine2.memory[0] = 2;
+const game2 = new Arcade();
+
+do {
+    const finished = machine2.run();
+    game2.build(machine2.popOutputs());
+    if (finished) break;
+    machine2.pushInputs([game2.getJoystick()]);
+} while(true);
+
+console.log(`Final score:`, game2.score);
+
+
+

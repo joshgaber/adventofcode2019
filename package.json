@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/joshgaber/adventofcode2019#readme",
   "dependencies": {
+    "blessed": "^0.1.81",
     "compute-gcd": "^1.2.0",
-    "lcm": "0.0.3"
+    "lcm": "0.0.3",
+    "terminal-kit": "^1.32.2"
   },
   "devDependencies": {},
   "description": ""
