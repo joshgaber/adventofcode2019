@@ -31,6 +31,3 @@ do {
 } while(true);
 
 console.log(`Final score:`, game2.score);
-
-
-
