@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const Intcode = require('./intcode');
+const Intcode = require('../utilities/intcode');
 const Arcade = require('./arcade');
 const Screen = require('./screen');
 
