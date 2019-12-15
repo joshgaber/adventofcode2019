@@ -1,53 +1,55 @@
 const fs = require('fs');
 const path = require('path');
 
-function buildFormulae(data) {
-  let formulae = {};
-  const lines = data.split(/\r?\n/g);
-  lines.forEach(l => {
-    const [reactants, product] = l.split(' => ');
-    const [quantity, name] = product.split(' ');
-    formulae[name] = {
-      name: name,
-      yield: parseInt(quantity),
-      required: 0,
-      reactants: buildReactants(reactants)
-    };
-  });
+const buildFormulae = (data) => data.split(/\r?\n/g).reduce((a, l) => ({
+  ...a,
+  [l.split(' => ')[1].split(' ')[1]]: {
+    yield: parseInt(l.split(' => ')[1].split(' ')[0]),
+    reserve: 0,
+    reactants: buildReactants(l.split(' => ')[0])
+  }
+}), {});
 
-  return formulae;
-}
+const buildReactants = (reactants) => reactants.split(/, */g).map(l => 
+  ({
+    name: l.split(' ')[1],
+    quantity: parseInt(l.split(' ')[0])
+  })
+);
 
-function buildReactants(reactants) {
-  const list = reactants.split(/, */g);
-  return list.map(l => {
-    const [quantity, name] = l.split(' ');
-    return {
-      name: name,
-      quantity: parseInt(quantity)
-    };
-  });
-}
+const clearReserve = (formulae) => Object.keys(formulae).forEach(f => formulae[f].reserve = 0);
+
+
 
 function findOreRequired (product, required, formulae) {
-  // const reactions = Math.ceil(required / product.yield);
-  // const formula = product.reactants.reduce((a, b) => (
-  //   b.name === 'ORE' ? a + b.quantity : a + findOreRequired(formulae[b.name], b.quantity, formulae)
-  // ), 0);
-  const formula = product.reactants.forEach(r => {
-    formulae[r.name].required += r.quantity;
-    if (r.name !== 'ORE') {
-      findOreRequired(formulae[r.name], r.quantity, formulae)
-    }
-  }, 0);
+  const reactions = Math.ceil((required - product.reserve) / product.yield);
+  product.reserve = reactions * product.yield + product.reserve - required;
+  
+  return product.reactants.reduce((a, r) => 
+    a + (
+      r.name === 'ORE' ?
+      reactions * r.quantity :
+      findOreRequired(formulae[r.name], reactions * r.quantity, formulae)
+    )
+  , 0);
 }
-
-
 
 data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 const formulae = buildFormulae(data);
-formulae.ORE = { name: 'ORE', required: 0 }
 
-findOreRequired(formulae.FUEL, 1, formulae)
+let ore = findOreRequired(formulae.FUEL, 1, formulae);
+console.log('Ore required to produce 1 Fuel:', ore);
 
-console.log(Object.keys(formulae).map(a => ({name: formulae[a].name, yield: formulae[a].yield, required: formulae[a].required})));
+const maxOre = 1000000000000
+let maxFuelProduced = 1;
+do {
+  clearReserve(formulae);
+  const newFuel = Math.floor(maxFuelProduced / ore * maxOre);
+  if (newFuel === maxFuelProduced) break;
+
+  ore = findOreRequired(formulae.FUEL, newFuel, formulae);
+  if (ore > maxOre) break;
+  maxFuelProduced = newFuel;
+} while (true);
+
+console.log('Fuel produced from 1 trillion ore:', maxFuelProduced);
