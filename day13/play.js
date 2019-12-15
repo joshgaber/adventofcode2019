@@ -29,3 +29,5 @@ do {
     term.updateInput(game.tiles, game.score);
     wait(50);
 } while(true);
+
+term.close();

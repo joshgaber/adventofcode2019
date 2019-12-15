@@ -36,4 +36,9 @@ module.exports = class {
         }, `\u041E\u0442\u043C\u0435\u0442\u043A\u0430: ${score}`);
         this.buffer.draw();
     }
+
+    close() {
+      this.term.fullscreen(false);
+      this.term.processExit(0);
+    }
 };
