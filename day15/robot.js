@@ -4,7 +4,7 @@ module.exports = class {
         x: 0,
         y: 0,
         depth: 0,
-        parent: null
+        tile: 1
     };
     tank = null;
     timesTankFound = 0;
@@ -25,13 +25,13 @@ module.exports = class {
             this.position = this.explored[this.hashPosition(position)];
         } else {
             this.explored[this.hashPosition(position)] = position;
-            position.parent = this.position;
             this.position = position;
         }
     }
 
-    nextPosition() {
+    nextPosition(input) {
         let position = Object.assign({}, this.position);
+        position.tile = input;
         position.depth++;
         switch (this.direction) {
             case 1:
@@ -54,7 +54,7 @@ module.exports = class {
 
     step(input = null) {
         if (input !== null) {
-            let position = this.nextPosition();
+            let position = this.nextPosition(input);
             switch (input) {
                 case 0:
                     this.currentDirectionIndex = (this.currentDirectionIndex + 3) % 4;
