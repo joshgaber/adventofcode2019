@@ -79,9 +79,18 @@ module.exports = class {
         if (paramMode === 0) {
             this.memory[this.memory[this.cursor + param]] = value;
         } else if (paramMode === 2) {
-            this.memory[this.memory[this.cursor + param] + this.relativeBase] = value; 
+            this.memory[this.memory[this.cursor + param] + this.relativeBase] = value;
         }
         return this;
+    }
+
+    setAddress(address, value) {
+        this.memory[address] = value;
+        return this;
+    }
+
+    getAddress(address) {
+        return this.memory[address];
     }
 
     advanceCursor(offset, base = this.cursor) {
@@ -104,4 +113,4 @@ module.exports = class {
     get lastOutput() {
         return this.outputs[this.outputs.length - 1];
     }
-}
+};

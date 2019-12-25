@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const Intcode = require('./intcode');
+const Intcode = require('../utilities/intcode');
 
 const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 const memory = data.split(',').map(Number);
