@@ -1,22 +1,26 @@
-const fs = require('fs');
-const path = require('path');
+export default class Day1 {
+    constructor(data) {
+        this.modules = data.split(/\r?\n/g);
+    }
 
-const calculateFuel = function(data) {
-    return Math.max(0, Math.floor(parseInt(data) / 3) - 2);
-};
+    part1() {
+        let transformed = this.modules.map(this.calculateFuel.bind(this));
+        let total = transformed.reduce((a, b) => a + b, 0);
+        console.log('Total weight of fuel needed (base):', total);
+    }
 
-const calculateWeightOfFuel = function(data) {
-    let fuel = calculateFuel(data);
-    return Math.max(0, fuel) + (fuel > 0 ? calculateWeightOfFuel(fuel) : 0);
-};
+    part2() {
+        const transformed = this.modules.map(this.calculateWeightOfFuel.bind(this));
+        const total = transformed.reduce((a, b) => a + b, 0);
+        console.log('Total weight of fuel needed (with added fuel):', total);
+    }
 
-const data = fs.readFileSync(path.join(__dirname, './input.txt'), 'utf8');
-const modules = data.split(/\r?\n/g);
+    calculateFuel(data) {
+        return Math.max(0, Math.floor(parseInt(data) / 3) - 2);
+    }
 
-let transformed = modules.map(calculateFuel);
-let total = transformed.reduce((a, b) => a + b, 0);
-console.log('Total weight of fuel needed (base):', total);
-
-transformed = modules.map(calculateWeightOfFuel);
-total = transformed.reduce((a, b) => a + b, 0);
-console.log('Total weight of fuel needed (with added fuel):', total);
+    calculateWeightOfFuel(data) {
+        let fuel = this.calculateFuel(data);
+        return Math.max(0, fuel) + (fuel > 0 ? this.calculateWeightOfFuel(fuel) : 0);
+    }
+}

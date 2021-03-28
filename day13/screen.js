@@ -1,6 +1,6 @@
-const tkit = require('terminal-kit');
+import tkit from 'terminal-kit'
 
-module.exports = class {
+export default class Screen {
 
     term = tkit.terminal();
     chars = {

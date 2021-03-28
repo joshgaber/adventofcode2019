@@ -1,33 +1,36 @@
-const fs = require('fs');
-const path = require('path');
-const Intcode = require('../utilities/intcode');
-const Arcade = require('./arcade');
+import Intcode from '../utilities/intcode.js'
+import Arcade from './arcade.js'
 
-const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
-const memory = data.split(',').map(Number);
+export default class Day13 {
+    constructor(data) {
+        this.memory = data.split(',').map(Number);
+    }
 
-const machine = new Intcode(memory.slice());
-machine.run();
+    part1() {
+        const machine = new Intcode(this.memory);
+        machine.run();
 
-const game = new Arcade();
-game.build(machine.popOutputs());
-const map = game.tiles;
+        const game = new Arcade();
+        game.build(machine.popOutputs());
+        const map = game.tiles;
 
-blockCount = Object.keys(map).filter(i => map[i].id === 2).length;
+        const blockCount = Object.keys(map).filter(i => map[i].id === 2).length;
 
-console.log(`Block count:`, blockCount);
+        console.log(`Block count:`, blockCount);
+    }
 
-// Part 2
+    part2() {
+        const machine2 = new Intcode(this.memory);
+        machine2.memory[0] = 2;
+        const game2 = new Arcade();
 
-const machine2 = new Intcode(memory.slice());
-machine2.memory[0] = 2;
-const game2 = new Arcade();
+        do {
+            const finished = machine2.run();
+            game2.build(machine2.popOutputs());
+            if (finished) break;
+            machine2.pushInputs([game2.getJoystick()]);
+        } while(true);
 
-do {
-    const finished = machine2.run();
-    game2.build(machine2.popOutputs());
-    if (finished) break;
-    machine2.pushInputs([game2.getJoystick()]);
-} while(true);
-
-console.log(`Final score:`, game2.score);
+        console.log(`Final score:`, game2.score);
+    }
+}

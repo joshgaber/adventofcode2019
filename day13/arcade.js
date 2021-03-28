@@ -1,4 +1,4 @@
-module.exports = class {
+export default class Arcade {
 
     tiles = {};
     score = 0;

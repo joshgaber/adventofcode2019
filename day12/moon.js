@@ -1,4 +1,4 @@
-module.exports = class {
+export default class Moon {
 
     velocity = {
         x: 0,

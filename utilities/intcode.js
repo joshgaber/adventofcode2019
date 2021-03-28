@@ -1,4 +1,4 @@
-module.exports = class {
+export default class Intcode {
 
     cursor = 0;
     outputs = [];
@@ -113,4 +113,4 @@ module.exports = class {
     get lastOutput() {
         return this.outputs[this.outputs.length - 1];
     }
-};
+}

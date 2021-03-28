@@ -2,8 +2,11 @@
   "name": "adventofcode",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "echo \"Still in the works\""
+    "start": "node index.js",
+    "day13": "node day13/play.js",
+    "day15": "node day15/play.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +25,5 @@
     "lcm": "0.0.3",
     "terminal-kit": "^1.32.2"
   },
-  "devDependencies": {},
   "description": ""
 }

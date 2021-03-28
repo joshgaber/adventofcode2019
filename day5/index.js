@@ -1,16 +1,21 @@
-const fs = require('fs');
-const path = require('path');
-const Intcode = require('../utilities/intcode');
+import Intcode from '../utilities/intcode.js'
 
-const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
-const memory = data.split(',').map(data => parseInt(data));
+export default class Day5 {
+    constructor(data) {
+        this.memory = data.split(',').map(data => parseInt(data));
+    }
 
-let machine = new Intcode(memory.slice());
-machine.pushInputs([1]).run();
+    part1() {
+        const machine = new Intcode([...this.memory]);
+        machine.pushInputs([1]).run();
 
-console.log(`diagnostic code for ID 1:`, machine.lastOutput);
+        console.log(`diagnostic code for ID 1:`, machine.lastOutput);
+    }
 
-machine = new Intcode(memory.slice());
-machine.pushInputs([5]).run();
+    part2() {
+        const machine = new Intcode([...this.memory]);
+        machine.pushInputs([5]).run();
 
-console.log(`diagnostic code for ID 5:`, machine.lastOutput);
+        console.log(`diagnostic code for ID 5:`, machine.lastOutput);
+    }
+}

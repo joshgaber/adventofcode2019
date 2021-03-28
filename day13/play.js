@@ -1,8 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-const Intcode = require('../utilities/intcode');
-const Arcade = require('./arcade');
-const Screen = require('./screen');
+import {readFileSync} from 'fs'
+import Intcode from '../utilities/intcode.js'
+import Arcade from './arcade.js'
+import Screen from './screen.js'
 
 function wait(ms){
     var start = new Date().getTime();
@@ -12,7 +11,7 @@ function wait(ms){
     }
 }
 
-const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+const data = readFileSync('./day13/input.txt', 'utf8');
 const memory = data.split(',').map(Number);
 
 const machine = new Intcode(memory.slice());

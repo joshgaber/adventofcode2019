@@ -1,10 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const Intcode = require('../utilities/intcode');
-const Robot = require('./robot');
-const Screen = require('./screen');
+import fs from 'fs'
+import Intcode from '../utilities/intcode.js'
+import Robot from './robot.js'
+import Screen from './screen.js'
 
-const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+const data = fs.readFileSync('./day15/input.txt', 'utf8');
 
 const memory = data.split(',').map(Number);
 const machine = new Intcode(memory.slice());

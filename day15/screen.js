@@ -1,7 +1,7 @@
-const tkit = require('terminal-kit');
-const wait = require('../utilities/wait');
+import tkit from 'terminal-kit'
+import wait from '../utilities/wait.js'
 
-module.exports = class {
+export default class Screen {
 
     term = tkit.terminal;
     chars = {
