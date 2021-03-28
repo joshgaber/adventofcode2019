@@ -1,12 +1,11 @@
 {
   "name": "adventofcode",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
+  "main": "index.ts",
   "scripts": {
-    "start": "node index.js",
-    "day13": "node day13/play.js",
-    "day15": "node day15/play.js"
+    "start": "ts-node index.ts",
+    "day13": "ts-node day13/play.ts",
+    "day15": "ts-node day15/play.ts"
   },
   "repository": {
     "type": "git",
@@ -20,10 +19,17 @@
   },
   "homepage": "https://github.com/joshgaber/adventofcode2019#readme",
   "dependencies": {
+    "@types/mathjs": "^6.0.11",
+    "@types/node": "^14.14.37",
+    "@types/terminal-kit": "^1.28.2",
     "blessed": "^0.1.81",
-    "compute-gcd": "^1.2.0",
-    "lcm": "0.0.3",
-    "terminal-kit": "^1.32.2"
+    "mathjs": "^9.3.0",
+    "terminal-kit": "^1.32.2",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "eslint": "^7.23.0"
+  }
 }
