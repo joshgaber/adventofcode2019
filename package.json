@@ -5,7 +5,9 @@
   "scripts": {
     "start": "ts-node index.ts",
     "day13": "ts-node day13/play.ts",
-    "day15": "ts-node day15/play.ts"
+    "day15": "ts-node day15/play.ts",
+    "lint": "eslint --fix --ext .ts .",
+    "lint-check": "eslint --ext .ts ."
   },
   "repository": {
     "type": "git",
@@ -30,6 +32,11 @@
   },
   "description": "",
   "devDependencies": {
-    "eslint": "^7.23.0"
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.23.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "^2.2.1"
   }
 }

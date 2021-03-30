@@ -19,28 +19,28 @@ import Day17 from './day17'
 import Day18 from './day18'
 
 const days: {
-    [key: string]: {
-        new(data: string): Day
-    }
+  [key: string]: {
+    new (data: string): Day
+  }
 } = {
-    'day1': Day1,
-    'day2': Day2,
-    'day3': Day3,
-    'day4': Day4,
-    'day5': Day5,
-    'day6': Day6,
-    'day7': Day7,
-    'day8': Day8,
-    'day9': Day9,
-    'day10': Day10,
-    'day11': Day11,
-    'day12': Day12,
-    'day13': Day13,
-    'day14': Day14,
-    'day15': Day15,
-    'day16': Day16,
-    'day17': Day17,
-    'day18': Day18
+  day1: Day1,
+  day2: Day2,
+  day3: Day3,
+  day4: Day4,
+  day5: Day5,
+  day6: Day6,
+  day7: Day7,
+  day8: Day8,
+  day9: Day9,
+  day10: Day10,
+  day11: Day11,
+  day12: Day12,
+  day13: Day13,
+  day14: Day14,
+  day15: Day15,
+  day16: Day16,
+  day17: Day17,
+  day18: Day18
 }
 
 export default days

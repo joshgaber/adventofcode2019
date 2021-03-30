@@ -1,4 +1,4 @@
 export default interface Pattern {
-    plus: number[]
-    minus: number[]
+  plus: number[]
+  minus: number[]
 }
