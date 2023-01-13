@@ -26,7 +26,7 @@
     "@types/terminal-kit": "^1.28.2",
     "blessed": "^0.1.81",
     "mathjs": "^9.3.0",
-    "terminal-kit": "^1.32.2",
+    "terminal-kit": "^2.1.8",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
   },
